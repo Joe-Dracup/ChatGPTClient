@@ -36,7 +36,16 @@ builder.Services.AddTransient<IGptChatHandler, GptChatHandler>();
 builder.Services.AddTransient<IGptChatApiClient, GptChatApiClient>();
 builder.Services.AddTransient<IContextHandler, ContextHandler>();
 
+ builder.Services.AddCors();
+ 
+
 var app = builder.Build();
+
+app.UseCors(builder => builder
+ .AllowAnyOrigin()
+ .AllowAnyMethod()
+ .AllowAnyHeader()
+);
 
 if (app.Environment.IsDevelopment())
 {
