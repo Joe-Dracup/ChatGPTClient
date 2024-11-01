@@ -1,4 +1,4 @@
-namespace GptClient
+namespace GptClient.Models
 {
     public record GptRequest(string message, Context Context);
 

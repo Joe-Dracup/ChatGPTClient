@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using GptClient;
+using GptClient.Models;
 using GPTClient.RequestHandlers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -8,6 +8,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 var builder = WebApplication.CreateBuilder(args);
 
 var apiKey = builder.Configuration["MySettings:GptKey"];
+
+builder.Logging.AddConsole(); // Add console logging
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -32,6 +34,7 @@ builder.Services.AddHttpClient("gptClient", client =>
 
 builder.Services.AddTransient<IGptChatHandler, GptChatHandler>();
 builder.Services.AddTransient<IGptChatApiClient, GptChatApiClient>();
+builder.Services.AddTransient<IContextHandler, ContextHandler>();
 
 var app = builder.Build();
 

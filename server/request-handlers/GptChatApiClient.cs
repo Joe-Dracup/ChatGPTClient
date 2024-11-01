@@ -1,10 +1,11 @@
 using System.Net;
+using GptClient.Models;
 
 namespace GPTClient.RequestHandlers
 {
     public interface IGptChatApiClient
     {
-        public Task<string> Request(string message);
+        public Task<string> Request(string userMessage, List<Message> messages);
     }
 
     public class GptChatApiClient : IGptChatApiClient
@@ -16,18 +17,13 @@ namespace GPTClient.RequestHandlers
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<string> Request(string message)
+        public async Task<string> Request(string userMessage, List<Message> messages)
         {
             var client = _httpClientFactory.CreateClient("gptClient");
 
-            var payload = new
-            {
-                model = "gpt-4o-mini",
-                messages = new[]
-                {
-                new { role = "user", content = message }
-            }
-            };
+            var payload = new ChatRequest("gpt-4o-mini", messages);
+
+            payload.Messages.Add(new Message("user", userMessage));
 
             var result = await client.PostAsJsonAsync(
                 "v1/chat/completions",
